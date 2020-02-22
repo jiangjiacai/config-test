@@ -1,0 +1,71 @@
+server:
+  port: 8773
+
+spring:
+  application:
+    name: pesbase
+  datasource:
+    name: druidDataSource
+    # 基本属性 url、username、password
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://localhost:3306/pes-lxl?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=GMT%2B8
+      username: root
+      password: '123'
+      driverClassName: com.mysql.cj.jdbc.Driver
+      filters: stat,wall,log4j,config
+      max-active: 100
+      initial-size: 5
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 50
+      max-pool-prepared-statement-per-connection-size: 20
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        concurrency: 10 #并发消费者的初始化值
+        max-concurrency: 20 #并发消费者的最大值
+        prefetch: 5 #每个消费者每次监听时可拉取处理的消息数量
+  #redis配置
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6379
+    timeout: 5000ms
+    jedis:
+      pool:
+        # 最大空闲连接
+        max-idle: 8
+        # 最小空闲链接
+        min-idle: 0
+        # 最大连接数（负数表示没有限制）
+        max-active: 8
+        # 最大阻塞等待时间（负数表示没有限制）
+        max-wait: -1
+      # 链接超时时间（毫秒）
+      timeout: 500
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    service-url:
+      defaultZone: http://localhost:7000/eureka/
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    lease-expiration-duration-in-seconds: 10 # 服务失效时间，10秒即过期 *生产环境90
+    lease-renewal-interval-in-seconds: 5 # 服务续约(renew)的间隔，5秒⼀次⼼跳  *生产环境30
+    instance-id:  ${spring.application.name}:${server.port}
