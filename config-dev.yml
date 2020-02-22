@@ -1,9 +1,4 @@
-server:
-  port: 8773
-
 spring:
-  application:
-    name: pesbase
   datasource:
     name: druidDataSource
     # 基本属性 url、username、password
